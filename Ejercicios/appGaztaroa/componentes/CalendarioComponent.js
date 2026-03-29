@@ -5,7 +5,7 @@ import { List, Divider } from 'react-native-paper';
 
 // componente funcional que no tiene estado que recibe parametros
 // List.Item: se usa para representar un elemento de una lista
-function Calendario({ excursiones }) {
+function Calendario({ excursiones, onPress }) {
     const renderCalendarioItem = ({ item }) => {
         return (
             <View>
@@ -21,6 +21,7 @@ function Calendario({ excursiones }) {
                             resizeMode="cover"
                         />
                     )}
+                    onPress={() => onPress(item.id)}
                     titleStyle={styles.titulo}
                     descriptionStyle={styles.descripcion}
                     contentStyle={styles.contenido}
