@@ -1,47 +1,48 @@
-import React from 'react';
+import { Component } from 'react';
 import { FlatList, View, Image, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { List, Divider } from 'react-native-paper';
 
-// componente funcional que no tiene estado que recibe parametros
-// List.Item: se usa para representar un elemento de una lista
-function Calendario({ excursiones, onPress }) {
-    const renderCalendarioItem = ({ item }) => {
+class Calendario extends Component {
+    render() {
+        // Funcion para navegar
+        const { navigate } = this.props.navigation;
+
+        const renderCalendarioItem = ({ item }) => {
+            return (
+                <View>
+                    <List.Item
+                        title={item.nombre}
+                        description={item.descripcion}
+                        titleNumberOfLines={0}
+                        descriptionNumberOfLines={6}
+                        onPress={() => navigate('DetalleExcursion', { excursionId: item.id })} // Nagevacion cuando pulsamos
+                        left={(props) => (
+                            <Image
+                                source={require('./imagenes/40Años.png')}
+                                style={[props.style, styles.imagen]}
+                                resizeMode="cover"
+                            />
+                        )}
+                        titleStyle={styles.titulo}
+                        descriptionStyle={styles.descripcion}
+                        contentStyle={styles.contenido}
+                    />
+                    <Divider />
+                </View>
+            );
+        };
+
         return (
-            <View>
-                <List.Item
-                    title={item.nombre}
-                    description={item.descripcion}
-                    titleNumberOfLines={0}
-                    descriptionNumberOfLines={6}
-                    left={(props) => (
-                        <Image
-                            source={require('./imagenes/40Años.png')}
-                            style={[props.style, styles.imagen]}
-                            resizeMode="cover"
-                        />
-                    )}
-                    onPress={() => onPress(item.id)}
-                    titleStyle={styles.titulo}
-                    descriptionStyle={styles.descripcion}
-                    contentStyle={styles.contenido}
+            <SafeAreaView style={styles.container}>
+                <FlatList
+                    data={this.props.excursiones}
+                    renderItem={renderCalendarioItem}
+                    keyExtractor={(item) => item.id.toString()}
                 />
-                <Divider />
-            </View>
+            </SafeAreaView>
         );
-    };
-    // FlatList: componente para manejar listas largas de forma optimizada
-    // solo renderiza elementos visible
-    return (
-        <SafeAreaView style={styles.container}>
-            
-            <FlatList
-                data={excursiones}
-                renderItem={renderCalendarioItem}
-                keyExtractor={(item) => item.id.toString()}
-            />
-        </SafeAreaView>
-    );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -64,4 +65,5 @@ const styles = StyleSheet.create({
         lineHeight: 20,
     },
 });
-export default Calendario; 
+
+export default Calendario;

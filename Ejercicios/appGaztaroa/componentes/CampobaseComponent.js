@@ -1,33 +1,72 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Calendario from './CalendarioComponent';
-import { EXCURSIONES } from '../comun/excursiones';
 import DetalleExcursion from './DetalleExcursionComponent';
-import { View } from 'react-native';
+import { EXCURSIONES } from '../comun/excursiones';
+import { Platform, View } from 'react-native';
+import Constants from 'expo-constants';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-// componente de clase
+// Creamos sistema de navegacion
+const Stack = createNativeStackNavigator();
+
 class Campobase extends Component {
     constructor(props) {
         super(props);
-        // recogida del parametro desde el JS con los datos
         this.state = {
             excursiones: EXCURSIONES,
-            seleccionExcursion: null
         };
     }
 
-    // para guarrdar la excursion seleccionada
-    onSeleccionExcursion(ExcursionId) {
-        this.setState({ seleccionExcursion: ExcursionId });
-    }
     render() {
-
         return (
-            <View style={{ flex: 1 }}>
-                <DetalleExcursion excursion={this.state.excursiones.filter((excursion) => excursion.id === this.state.seleccionExcursion)[0]} />
-                <Calendario excursiones={this.state.excursiones} onPress={(
-                    excursionId) => this.onSeleccionExcursion(excursionId)} />
-            </View>
+            //NavigationContainer en el contenedor global de navegacion toda la app va dentro
+            //Stack.Navigator define las pantallas disponobles
+            // Stack.Screen = Calendario pantalla inicial que muestra el calendario
+            // Stack.Name = DetalleExcursion nos lleva a la pantalla de detalle al pulsar
+            <NavigationContainer> 
+                <View style={{ flex: 1, paddingTop: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight }}>
+                    <Stack.Navigator
+                        initialRouteName="Calendario"
+                        screenOptions={{
+                            headerTintColor: '#fff',
+                            headerStyle: { backgroundColor: '#015afc' },
+                            headerTitleStyle: { color: '#fff' },
+                        }}
+                    >
+                        <Stack.Screen
+                            name="Calendario"
+                            options={{
+                                title: 'Calendario Gaztaroa',
+                            }}
+                        >
+                            {(props) => (
+                                <Calendario
+                                    {...props}
+                                    excursiones={this.state.excursiones}
+                                />
+                            )}
+                        </Stack.Screen>
+
+                        <Stack.Screen
+                            name="DetalleExcursion"
+                            options={{
+                                title: 'Detalle Excursión',
+                                headerBackTitle: 'Calendario',
+                            }}
+                        >
+                            {(props) => (
+                                <DetalleExcursion
+                                    {...props}
+                                    excursiones={this.state.excursiones}
+                                />
+                            )}
+                        </Stack.Screen>
+                    </Stack.Navigator>
+                </View>
+            </NavigationContainer>
         );
     }
 }
-export default Campobase; // retorno para que sea visible para otros componentes
+
+export default Campobase;
