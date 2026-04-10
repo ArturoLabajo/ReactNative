@@ -8,20 +8,68 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from './HomeComponent';
+import Contacto from './ContactoComponent';
+import QuienesSomos from './QuienesSomosComponent';
 
-// Creamos sistema de navegacion
-const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
+// creación de navegaciones
+const Stack = createNativeStackNavigator(); // navegacion interna
+const Drawer = createDrawerNavigator(); // menu lateral
 
 class Campobase extends Component {
     constructor(props) {
         super(props);
+
+        // estado global con los datos
         this.state = {
             excursiones: EXCURSIONES,
         };
     }
 
-    // home de la app donde nos puede redirigir el menu 
+    // stack para Quienes Somos
+    QuienesSomosNavegador = () => {
+        return (
+            <Stack.Navigator
+                initialRouteName="QuienesSomos"
+                screenOptions={{
+                    headerTintColor: '#fff',
+                    headerStyle: { backgroundColor: '#015afc' },
+                    headerTitleStyle: { color: '#fff' },
+                }}
+            >
+                <Stack.Screen
+                    name="QuienesSomos"
+                    component={QuienesSomos}
+                    options={{
+                        title: 'Quiénes somos',
+                    }}
+                />
+            </Stack.Navigator>
+        );
+    };
+
+    // stack para Contacto
+    ContactoNavegador = () => {
+        return (
+            <Stack.Navigator
+                initialRouteName="Contactomenu"
+                screenOptions={{
+                    headerTintColor: '#fff',
+                    headerStyle: { backgroundColor: '#015afc' },
+                    headerTitleStyle: { color: '#fff' },
+                }}
+            >
+                <Stack.Screen
+                    name="Contactomenu"
+                    component={Contacto}
+                    options={{
+                        title: 'Contacto',
+                    }}
+                />
+            </Stack.Navigator>
+        );
+    };
+
+    // stack para el home
     HomeNavegador = () => {
         return (
             <Stack.Navigator
@@ -34,7 +82,7 @@ class Campobase extends Component {
             >
                 <Stack.Screen
                     name="Home"
-                    component={Home}
+                    component={Home} // componente que se renderiza
                     options={{
                         title: 'Campo Base',
                     }}
@@ -43,7 +91,7 @@ class Campobase extends Component {
         );
     };
 
-    // calendario al que nos puede llevar el menu donde mostramos las excursiones
+    // stack para calendario y detalle
     CalendarioNavegador = () => {
         return (
             <Stack.Navigator
@@ -54,6 +102,7 @@ class Campobase extends Component {
                     headerTitleStyle: { color: '#fff' },
                 }}
             >
+                {/* Pantalla lista*/}
                 <Stack.Screen
                     name="Calendario"
                     options={{
@@ -62,16 +111,18 @@ class Campobase extends Component {
                 >
                     {(props) => (
                         <Calendario
-                            {...props}
-                            excursiones={this.state.excursiones}
+                            {...props} //navegacion
+                            excursiones={this.state.excursiones} // datos
                         />
                     )}
                 </Stack.Screen>
+
+                {/*Pantalla detalle*/}
                 <Stack.Screen
                     name="DetalleExcursion"
                     options={{
                         title: 'Detalle Excursión',
-                        headerBackTitle: 'Calendario',
+                        headerBackTitle: 'Calendario', // texto boton back
                     }}
                 >
                     {(props) => (
@@ -84,11 +135,13 @@ class Campobase extends Component {
             </Stack.Navigator>
         );
     };
+
+    // Drawer del menu lateral
     DrawerNavegador = () => {
         return (
             // Define el menu lateral y las diferentes opciones que te llevan a diferentes secciones
             <Drawer.Navigator
-                initialRouteName="Campo base"
+                initialRouteName="Campo base" // pantalla inicial
                 screenOptions={{
                     headerShown: false, // activar cabecera extra sino desliza desde el borde para abrir el "menu"
                     drawerStyle: {
@@ -96,21 +149,32 @@ class Campobase extends Component {
                     },
                 }}
             >
-        
+
+                {/* Diferentes opciones */}
                 <Drawer.Screen
                     name="Campo base"
                     component={this.HomeNavegador}
                 />
                 <Drawer.Screen
+                    name="Quienes somos"
+                    component={this.QuienesSomosNavegador}
+                />
+                <Drawer.Screen
                     name="Calendario Menu"
                     component={this.CalendarioNavegador}
                 />
+                <Drawer.Screen
+                    name="Contacto"
+                    component={this.ContactoNavegador}
+                />
+
             </Drawer.Navigator>
         );
     };
     render() {
         return (
             <NavigationContainer>
+                {/* Contenedor global de navegacion */}
                 <View style={{
                     flex: 1, paddingTop: Platform.OS === 'ios' ? 0 :
                         Constants.statusBarHeight
