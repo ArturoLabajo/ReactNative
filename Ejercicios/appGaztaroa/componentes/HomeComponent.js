@@ -1,9 +1,10 @@
 import { Component } from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
-import { Card, Text } from 'react-native-paper';
+import { ScrollView, View, StyleSheet, ImageBackground, Text } from 'react-native';
+import { Card } from 'react-native-paper';
 import { EXCURSIONES } from '../comun/excursiones';
 import { CABECERAS } from '../comun/cabeceras';
 import { ACTIVIDADES } from '../comun/actividades';
+import { baseUrl } from '../comun/comun';
 
 function RenderItem({ item }) {
   if (!item) {
@@ -12,15 +13,17 @@ function RenderItem({ item }) {
 
   return (
     <Card style={styles.card}>
-      <Card.Title
-        title={item.nombre}
-        titleStyle={styles.titulo}
-        style={styles.cardTitle}
-      />
-      <Card.Cover
-        source={require('./imagenes/40Años.png')}
+      <ImageBackground
+        source={{ uri: baseUrl + item.imagen }}
         style={styles.image}
-      />
+      >
+        <View style={styles.tituloContainer}>
+          <Text style={styles.tituloSobreImagen}>
+            {item.nombre}
+          </Text>
+        </View>
+      </ImageBackground>
+
       <Card.Content>
         <Text style={styles.descripcion}>
           {item.descripcion}
@@ -56,7 +59,8 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   image: {
-    marginHorizontal: 0,
+    height: 200,
+    justifyContent: 'center',
   },
   descripcion: {
     marginTop: 20,
@@ -67,6 +71,20 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     alignItems: 'center',
+  },
+  tituloContainer: {
+    alignSelf: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.4)', 
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+
+  tituloSobreImagen: {
+    color: 'chocolate', 
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

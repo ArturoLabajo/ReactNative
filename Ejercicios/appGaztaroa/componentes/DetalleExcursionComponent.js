@@ -1,8 +1,9 @@
 import { Component } from 'react';
-import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
+import { View, StyleSheet, ScrollView, FlatList, ImageBackground } from 'react-native';
 import { Card, Text, Divider, IconButton } from 'react-native-paper';
 import { EXCURSIONES } from '../comun/excursiones';
 import { COMENTARIOS } from '../comun/comentarios';
+import { baseUrl } from '../comun/comun';
 
 function RenderExcursion(props) {
 
@@ -11,15 +12,16 @@ function RenderExcursion(props) {
     if (excursion != null) {
         return (
             <Card style={styles.card}>
-                <Card.Title
-                    title={excursion.nombre}
-                    titleStyle={styles.titulo}
-                    style={styles.cardTitle}
-                />
-                <Card.Cover
-                    source={require('./imagenes/40Años.png')}
+                <ImageBackground
+                    source={{ uri: baseUrl + excursion.imagen }}
                     style={styles.image}
-                />
+                >
+                    <View style={styles.tituloContainer}>
+                        <Text style={styles.tituloSobreImagen}>
+                            {excursion.nombre}
+                        </Text>
+                    </View>
+                </ImageBackground>
                 <Card.Content>
                     <Text style={styles.descripcion}>
                         {excursion.descripcion}
@@ -138,7 +140,8 @@ const styles = StyleSheet.create({
         margin: 8,
     },
     image: {
-        marginHorizontal: 0,
+        height: 220,
+        justifyContent: 'center',
     },
     descripcion: {
         marginTop: 20,
@@ -159,6 +162,20 @@ const styles = StyleSheet.create({
     comentarioTexto: {
         fontSize: 17,
         marginBottom: 4,
+    },
+    tituloContainer: {
+        alignSelf: 'center', 
+        backgroundColor: 'rgba(0,0,0,0.4)', 
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 6,
+    },
+
+    tituloSobreImagen: {
+        color: 'white',
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 

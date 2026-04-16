@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { FlatList, View, Image, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { List, Divider } from 'react-native-paper';
+import { baseUrl } from '../comun/comun';
 
 class Calendario extends Component {
     render() {
@@ -19,7 +20,7 @@ class Calendario extends Component {
                         onPress={() => navigate('DetalleExcursion', { excursionId: item.id })} // Nagevacion cuando pulsamos
                         left={(props) => (
                             <Image
-                                source={require('./imagenes/40Años.png')}
+                                source={{ uri: baseUrl + item.imagen }}
                                 style={[props.style, styles.imagen]}
                                 resizeMode="cover"
                             />
