@@ -4,16 +4,22 @@ import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as PaperProvider } from 'react-native-paper';
 import Campobase from './componentes/CampobaseComponent';
+import { ConfigureStore } from './redux/configureStore';
+import { Provider } from 'react-redux';
+
+const store = ConfigureStore();
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <PaperProvider>
-        <View style={{ flex: 1 }}>
-          <Campobase />
-          <StatusBar style="auto" />
-        </View>
-      </PaperProvider>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <PaperProvider>
+          <View style={{ flex: 1 }}>
+            <Campobase />
+            <StatusBar style="auto" />
+          </View>
+        </PaperProvider>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
