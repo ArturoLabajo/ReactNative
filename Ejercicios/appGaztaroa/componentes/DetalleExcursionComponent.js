@@ -3,14 +3,20 @@ import { View, StyleSheet, ScrollView, FlatList, ImageBackground } from 'react-n
 import { Card, Text, Divider, IconButton } from 'react-native-paper';
 import { baseUrl } from '../comun/comun';
 import { connect } from 'react-redux';
+import { postFavorito } from '../redux/ActionCreators';
 
 
 const mapStateToProps = (state) => {
     return {
         excursiones: state.excursiones,
         comentarios: state.comentarios,
+        favoritos: state.favoritos,
     };
 };
+
+const mapDispatchToProps = (dispatch) => ({
+    postFavorito: (excursionId) => dispatch(postFavorito(excursionId))
+});
 
 
 function RenderExcursion(props) {
@@ -102,21 +108,9 @@ function RenderComentario(props) {
 }
 
 class DetalleExcursion extends Component {
-    constructor(props) {
-        super(props);
-
-        // Estado local
-        this.state = {
-            favoritos: [],
-        };
-    }
-
     // Funcion para marcar una excursion como favortia
     marcarFavorito(excursionId) {
-        this.setState({
-            // Anadimos el id al array de favortios
-            favoritos: this.state.favoritos.concat(excursionId)
-        });
+        this.props.postFavorito(excursionId);
     }
 
     render() {
@@ -126,7 +120,7 @@ class DetalleExcursion extends Component {
             <ScrollView>
                 <RenderExcursion
                     excursion={this.props.excursiones.excursiones[+excursionId]}
-                    favorita={this.state.favoritos.some(el => el === excursionId)}
+                    favorita={this.props.favoritos.favoritos.some(el => el === excursionId)}
                     onPress={() => this.marcarFavorito(excursionId)}
                 />
                 <RenderComentario
@@ -170,8 +164,8 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     tituloContainer: {
-        alignSelf: 'center', 
-        backgroundColor: 'rgba(0,0,0,0.4)', 
+        alignSelf: 'center',
+        backgroundColor: 'rgba(0,0,0,0.4)',
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 6,
@@ -185,4 +179,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect(mapStateToProps)(DetalleExcursion);
+export default connect(mapStateToProps, mapDispatchToProps)(DetalleExcursion);

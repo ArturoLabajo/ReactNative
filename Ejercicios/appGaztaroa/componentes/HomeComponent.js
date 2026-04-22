@@ -3,6 +3,7 @@ import { ScrollView, View, StyleSheet, ImageBackground, Text } from 'react-nativ
 import { Card } from 'react-native-paper';
 import { baseUrl } from '../comun/comun';
 import { connect } from 'react-redux';
+import { IndicadorActividad } from './IndicadorActividadComponent';
 
 
 const mapStateToProps = (state) => {
@@ -13,31 +14,54 @@ const mapStateToProps = (state) => {
   };
 };
 
-function RenderItem({ item }) {
-  if (!item) {
-    return <View />;
+function RenderItem(props) {
+
+  const item = props.item;
+  
+  if (props.isLoading) {
+    return (
+      <IndicadorActividad />
+    );
+  }
+  else if (props.errMess) {
+    return (
+      <View>
+        <Text>{props.errMess}</Text>
+      </View>
+    );
   }
 
-  return (
-    <Card style={styles.card}>
-      <ImageBackground
-        source={{ uri: baseUrl + item.imagen }}
-        style={styles.image}
-      >
-        <View style={styles.tituloContainer}>
-          <Text style={styles.tituloSobreImagen}>
-            {item.nombre}
-          </Text>
-        </View>
-      </ImageBackground>
+  else {
+    const item = props.item;
 
-      <Card.Content>
-        <Text style={styles.descripcion}>
-          {item.descripcion}
-        </Text>
-      </Card.Content>
-    </Card>
-  );
+    if (item != null) {
+      return (
+        <Card style={styles.card}>
+          <ImageBackground
+            source={{ uri: baseUrl + item.imagen }}
+            style={styles.image}
+          >
+            <View style={styles.tituloContainer}>
+              <Text style={styles.tituloSobreImagen}>
+                {item.nombre}
+              </Text>
+            </View>
+          </ImageBackground>
+
+          <Card.Content>
+            <Text style={styles.descripcion}>
+              {item.descripcion}
+            </Text>
+          </Card.Content>
+        </Card>
+      );
+    }
+    else{
+      return(<View></View>);
+    }
+  }
+
+
 }
 
 class Home extends Component {
@@ -46,7 +70,9 @@ class Home extends Component {
     return (
       <ScrollView>
         <RenderItem item={this.props.cabeceras.cabeceras.filter((item) => item.destacado)[0]} />
-        <RenderItem item={this.props.excursiones.excursiones.filter((item) => item.destacado)[0]} />
+        <RenderItem item={this.props.excursiones.excursiones.filter((excursion) => excursion.destacado)[0]}
+          isLoading={this.props.excursiones.isLoading}
+          errMess={this.props.excursiones.errMess} />
         <RenderItem item={this.props.actividades.actividades.filter((item) => item.destacado)[0]} />
       </ScrollView>
     );

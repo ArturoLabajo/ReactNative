@@ -41,15 +41,27 @@ class Calendario extends Component {
             );
         };
 
-        return (
-            <SafeAreaView style={styles.container}>
-                <FlatList
-                    data={this.props.excursiones.excursiones}
-                    renderItem={renderCalendarioItem}
-                    keyExtractor={(item) => item.id.toString()}
-                />
-            </SafeAreaView>
-        );
+        if (this.props.excursiones.isLoading) {
+            return <IndicadorActividad />;
+        } else if (this.props.excursiones.errMess) {
+            return (
+                <View>
+                    <Text>{this.props.excursiones.errMess}</Text>
+                </View>
+            );
+        } else {
+            return (
+                <SafeAreaView style={styles.container}>
+                    <FlatList
+                        data={this.props.excursiones.excursiones}
+                        renderItem={renderCalendarioItem}
+                        keyExtractor={(item) => item.id.toString()}
+                    />
+                </SafeAreaView>
+            );
+        }
+
+
     }
 }
 
